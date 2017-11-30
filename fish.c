@@ -58,7 +58,6 @@ int main(int argc, char * argv[])
       	if (closePelletCol != 10)
       	{
         	int moveFish = closePelletCol - fishColumnPosition;
-        	
         	while (abs(moveFish))
         	{
           		int pelletRowPosition = 10;
@@ -123,4 +122,4 @@ int main(int argc, char * argv[])
 	}
 	return 0;
 }
-//---------------------------------------------------------------------------------
+int 
