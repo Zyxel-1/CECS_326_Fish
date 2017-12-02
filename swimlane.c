@@ -7,17 +7,7 @@
 //---------------------------------------------------------------------------------
 #include "memoryPool.h"
 //---------------------------------------------------------------------------------
-#include <sys/types.h>	/* */
-#include <sys/ipc.h>	/* */
-#include <sys/shm.h>	/* */
-#include <stdio.h>		/* Needed for input/output functions*/
-#include <sys/wait.h>   /* Needed for the wait function */
-#include <unistd.h>     /* Needed for the fork function */
-#include <string.h>     /* Needed for the strcat function */
-#include <stdbool.h>	/* Needed for booleans*/
-#include <signal.h>		/* Needed for handling signals while executing programs*/
-#include <stdlib.h>		/* Needed for standard library*/
-#include <time.h> 		/* Needed for timer */
+
 // Functions Definitions
 void deAllocateMemory();
 void printSwimLane(int);
@@ -30,14 +20,22 @@ pid_t idPellet;
 pid_t idFish;
 pid_t ProcessPrint;
 key_t key;
+#include <sys/sem.h>
 //---------------------------------------------------------------------------------
 int main(int argc, char * argv[])
  {
  	int sharedMemoryID;
  	sharedMemoryID = shmget(MemKey, sizeof(char[10][10]), IPC_CREAT | 0666);
- 	// Gets Memory
+ 	
+	 // Gets Memory
 	sharedMemory();
 	attachMemory();
+	setSemaphore();
+	  if ( semctl(semid, 0, SETVAL, 1) < 0)
+    {
+        perror("semctl failure inside initializer");
+        exit(-1);
+    }
 	// Sets up signals
 	signal(SIGINT,CTR_C);
 	signal(SIGTERM,timesUp);
@@ -100,22 +98,17 @@ void deAllocateMemory(){
 	kill(0,SIGTERM);
 }
 //---------------------------------------------------------------------------------
-//Purpose:
-//Outputs:
-//Inputs:
 void printSwimLane(int timer){
-printf("\nTimer:%i\n",timer);
-				for(int i = 0; i< 10; i++){
-					for(int j = 0; j < 10; j++){
-						printf("%c ", * Swimlane[i][j]);
-					}
-					printf("\n");
-				}
+	printf("\nTimer:%i\n",timer);
+	for(int i = 0; i< 10; i++){
+		for(int j = 0; j < 10; j++){
+			printf("%c ", * Swimlane[i][j]);		
+		}
+		printf("\n");
+	}
 }
 //---------------------------------------------------------------------------------
 //Purpose: Creates the characters in the swimlane matrix. It sets it to '~' character
-//Outputs:
-//Inputs:
 void initializeSwimlane(){
 	printf("\nCreating SwimLane:\n");
 	for(int i = 0; i< 10; i++){

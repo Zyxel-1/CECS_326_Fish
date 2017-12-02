@@ -6,14 +6,19 @@
 //	File: fish.c
 //---------------------------------------------------------------------------------
 #include "memoryPool.h"
+#include <sys/sem.h>
 //---------------------------------------------------------------------------------
 int main(int argc, char * argv[])
 {
 	sharedMemory();
 	attachMemory();
+	attachSemaphore();
 	// Placing fish into the middle of grid
+	lock();
 	* Swimlane[9][5] = 'F';
+	unlock();
 	// Running through the locations and movement of fish
+
 	while(true)
 	{
 		// Finding fish position on the grid
@@ -22,8 +27,10 @@ int main(int argc, char * argv[])
       	{
         	for (int j = 1; j < 10; j++) 
         	{
+						lock();
           		if ( * Swimlane[i][j] == 'F') 
             		fishColumnPosition = j;
+						unlock();
         	}
       	}
       	//Finding pellet row position on the grid
@@ -32,11 +39,13 @@ int main(int argc, char * argv[])
       	{
         	for (int j = 1; j < 10; j++) 
         	{
+						lock();
         	  	if ( * Swimlane[i][j] == 'o')
         	  	{
            	 		if (abs(pelletRowPosition - 9) < abs(i - 9))
           	   			pelletRowPosition = i;
           		}
+						unlock();
         	}
       	}
 	    //Finds the closest pellet in the column
@@ -45,11 +54,13 @@ int main(int argc, char * argv[])
 	    {
 	        for (int j = 1; j < 10; j++) 
 	        {
+						lock();
 	          if ( * Swimlane[i][j] == 'o') 
 	          {
 	            if (abs(closePelletCol - fishColumnPosition) > abs(j - fishColumnPosition)) 
 	              closePelletCol = j;
 	          }
+						unlock();
 	        }
 	    }
 //-------------------------------------------------------------------------------------------
@@ -65,23 +76,28 @@ int main(int argc, char * argv[])
           		{
             		for (int j = 1; j < 10; j++)
             		{
+									lock();
               			if ( * Swimlane[i][j] == 'o')
               			{
                 			if (abs(pelletRowPosition - 9) < abs(i - 9))
                   				break;
               			}
+									unlock();
             		}
           		}
           		// replace fish with ~
+							lock();
           		* Swimlane[9][fishColumnPosition] = '~';
+							unlock();
           		//Helps determine where to move the fish
           		if (moveFish <= 0)
             		fishColumnPosition--;
           		else
             		fishColumnPosition++;
             	// Place Fish once moved
+							lock();
 				* Swimlane[9][fishColumnPosition] = 'F';
-
+				unlock();
           		if (moveFish <= 0)
             		moveFish++;
           		else 
@@ -98,19 +114,25 @@ int main(int argc, char * argv[])
 	          {
 	            for (int j = 0; j < 10; j++)
 	            {
+								lock();
 	              if ( * Swimlane[i][j] == 'o')
 	              {
 	                if (abs(pelletRowPosition - 9) < abs(i - 9))
 	                  break;
 	              }
+								unlock();
 	            }
 	          }
+						lock();
 	          * Swimlane[9][fishColumnPosition] = '~'; 
+						unlock();
 	          if (moveFish <= 0)
 	            fishColumnPosition++;
 	          else if (moveFish >= 0)
 	            fishColumnPosition--;
+						lock();
 	          * Swimlane[9][fishColumnPosition] = 'F';
+						unlock();
 	          if (moveFish <= 0)
 	            moveFish++;
 	          else if (moveFish >= 0)
@@ -122,4 +144,3 @@ int main(int argc, char * argv[])
 	}
 	return 0;
 }
-int 
