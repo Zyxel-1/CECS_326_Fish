@@ -1,0 +1,3 @@
+git rm --cached fish
+git rm --cached pellet
+git rm --cached swimlane
