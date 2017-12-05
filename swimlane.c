@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
 	sharedMemory();
 	attachMemory();
 	setSemaphore();
-	if ( semctl(semid, 0, SETVAL, 1) < 0)
+	  if ( semctl(semid, 0, SETVAL, 1) < 0)
     {
         perror("semctl failure inside initializer");
         exit(-1);
