@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------------
 #include "memoryPool.h"
 //---------------------------------------------------------------------------------
+
 // Functions Definitions
 void deAllocateMemory();
 void printSwimLane(int);
@@ -19,6 +20,7 @@ pid_t idPellet;
 pid_t idFish;
 pid_t ProcessPrint;
 key_t key;
+#include <sys/sem.h>
 //---------------------------------------------------------------------------------
 int main(int argc, char * argv[])
  {
@@ -28,9 +30,10 @@ int main(int argc, char * argv[])
 	 // Gets Memory
 	sharedMemory();
 	attachMemory();
+	setSemaphore();
 	if ( semctl(semid, 0, SETVAL, 1) < 0)
     {
-        perror("An error has occured in semctl.");
+        perror("semctl failure inside initializer");
         exit(-1);
     }
 	// Sets up signals
