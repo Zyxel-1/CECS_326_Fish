@@ -1,6 +1,6 @@
 # Shared Memory and Semaphores
 Fish Program demonstrating the usage of shared memory and Semaphores 
-https://travis-ci.org/Zyxel-1/CECS_326_Fish.svg?branch=master
+[![Build Status](https://travis-ci.org/Zyxel-1/CECS_326_Fish.svg?branch=master)](https://travis-ci.org/Zyxel-1/CECS_326_Fish)
 ## Getting Started
 This program has been developed in Ubuntu 16.04.
 ### Pre-requisites
